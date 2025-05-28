@@ -34,7 +34,9 @@ export default function FileUploadSection() {
 
       {/* 템플릿 안내 */}
       <div className="bg-primary-50 border border-primary-200 rounded-lg p-5 mb-5">
-        <div className="font-bold text-secondary-900 mb-3">📋 업로드 파일 형식 안내</div>
+        <div className="font-bold text-secondary-900 mb-3">
+          📋 업로드 파일 형식 안내
+        </div>
         <ul className="text-sm text-secondary-700 mb-4 ml-5 space-y-1">
           <li>지원 형식: Excel (.xlsx, .xls), CSV (.csv)</li>
           <li>최대 파일 크기: 10MB</li>
@@ -58,7 +60,7 @@ export default function FileUploadSection() {
 
       {/* 파일 선택 버튼 */}
       <div className="flex gap-4 mb-5">
-        <Button variant="primary">파일 선택</Button>
+        <Button variant="default">파일 선택</Button>
         <Button variant="secondary">샘플 데이터 로드</Button>
       </div>
 
@@ -72,13 +74,16 @@ export default function FileUploadSection() {
             >
               <div className="text-2xl text-green-600 mr-4">📊</div>
               <div className="flex-1">
-                <div className="font-bold text-secondary-900 mb-1">{file.name}</div>
+                <div className="font-bold text-secondary-900 mb-1">
+                  {file.name}
+                </div>
                 <div className="text-sm text-secondary-600">
-                  크기: {file.size} | 업로드: {file.uploadDate} | 행 수: {file.rowCount}개
+                  크기: {file.size} | 업로드: {file.uploadDate} | 행 수:{" "}
+                  {file.rowCount}개
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="primary" size="sm">
+                <Button variant="default" size="sm">
                   미리보기
                 </Button>
                 <Button

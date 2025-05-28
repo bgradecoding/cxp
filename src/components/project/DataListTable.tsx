@@ -14,12 +14,18 @@ interface DataItem {
   status: "완료" | "처리 실패";
 }
 
+interface RouteSegment {
+  mode: string;
+  distance: number;
+  location: string;
+}
+
 interface RouteDetail {
   id: number;
   departure: string;
   arrival: string;
   transportMode: string;
-  segments: any[];
+  segments: RouteSegment[];
 }
 
 export default function DataListTable() {
@@ -33,7 +39,8 @@ export default function DataListTable() {
       departure: "대구",
       arrival: "뉴욕",
       transportMode: "복합",
-      route: "대구 (자동차, 98km) → 대구국제공항 (항공, 0km) → 뉴욕 (자동차, 0km)",
+      route:
+        "대구 (자동차, 98km) → 대구국제공항 (항공, 0km) → 뉴욕 (자동차, 0km)",
       status: "처리 실패",
     },
     {
@@ -41,7 +48,8 @@ export default function DataListTable() {
       departure: "청주",
       arrival: "상하이",
       transportMode: "복합",
-      route: "청주 (자동차, 90km) → 청주국제공항 (항공, 4,794km) → 푸동국제공항 → 상하이 (자동차, 138km)",
+      route:
+        "청주 (자동차, 90km) → 청주국제공항 (항공, 4,794km) → 푸동국제공항 → 상하이 (자동차, 138km)",
       status: "완료",
     },
     {
@@ -49,7 +57,8 @@ export default function DataListTable() {
       departure: "청주",
       arrival: "자카르타",
       transportMode: "복합",
-      route: "청주 (자동차, 122km) → 청주국제공항 (항공, 2,696km) → 수카르노 하타국제공항 → 자카르타 (자동차, 107km)",
+      route:
+        "청주 (자동차, 122km) → 청주국제공항 (항공, 2,696km) → 수카르노 하타국제공항 → 자카르타 (자동차, 107km)",
       status: "완료",
     },
     {
@@ -57,7 +66,8 @@ export default function DataListTable() {
       departure: "광주",
       arrival: "상하이",
       transportMode: "복합",
-      route: "광주 (자동차, 98km) → 무안국제공항 (항공, 2,858km) → 푸동국제공항 → 상하이 (자동차, 71km)",
+      route:
+        "광주 (자동차, 98km) → 무안국제공항 (항공, 2,858km) → 푸동국제공항 → 상하이 (자동차, 71km)",
       status: "완료",
     },
     {
@@ -65,7 +75,8 @@ export default function DataListTable() {
       departure: "대전",
       arrival: "오클랜드",
       transportMode: "복합",
-      route: "대전 (자동차, 110km) → 청주국제공항 (항공, 2,576km) → 오클랜드국제공항 → 오클랜드 (자동차, 67km)",
+      route:
+        "대전 (자동차, 110km) → 청주국제공항 (항공, 2,576km) → 오클랜드국제공항 → 오클랜드 (자동차, 67km)",
       status: "완료",
     },
     {
@@ -73,7 +84,8 @@ export default function DataListTable() {
       departure: "청주",
       arrival: "홍콩",
       transportMode: "복합",
-      route: "청주 (자동차, 135km) → 청주국제공항 (항공, 0km) → 홍콩 (자동차, 0km)",
+      route:
+        "청주 (자동차, 135km) → 청주국제공항 (항공, 0km) → 홍콩 (자동차, 0km)",
       status: "처리 실패",
     },
     {
@@ -81,7 +93,8 @@ export default function DataListTable() {
       departure: "대전",
       arrival: "뉴욕",
       transportMode: "복합",
-      route: "대전 (자동차, 96km) → 청주국제공항 (항공, 5,273km) → JFK → 뉴욕 (자동차, 82km)",
+      route:
+        "대전 (자동차, 96km) → 청주국제공항 (항공, 5,273km) → JFK → 뉴욕 (자동차, 82km)",
       status: "완료",
     },
     {
@@ -89,7 +102,8 @@ export default function DataListTable() {
       departure: "광주",
       arrival: "도쿄",
       transportMode: "복합",
-      route: "광주 (자동차, 87km) → 무안국제공항 (항공, 2,454km) → 나리타국제공항 → 도쿄 (자동차, 123km)",
+      route:
+        "광주 (자동차, 87km) → 무안국제공항 (항공, 2,454km) → 나리타국제공항 → 도쿄 (자동차, 123km)",
       status: "완료",
     },
     {
@@ -97,7 +111,8 @@ export default function DataListTable() {
       departure: "인천",
       arrival: "멜버른",
       transportMode: "복합",
-      route: "인천 (자동차, 69km) → 인천국제공항 (항공, 1,710km) → 멜버른공항 → 멜버른 (자동차, 97km)",
+      route:
+        "인천 (자동차, 69km) → 인천국제공항 (항공, 1,710km) → 멜버른공항 → 멜버른 (자동차, 97km)",
       status: "완료",
     },
     {
@@ -105,7 +120,8 @@ export default function DataListTable() {
       departure: "고양",
       arrival: "멜버른",
       transportMode: "복합",
-      route: "고양 (자동차, 108km) → 인천국제공항 (항공, 1,730km) → 멜버른공항 → 멜버른 (자동차, 82km)",
+      route:
+        "고양 (자동차, 108km) → 인천국제공항 (항공, 1,730km) → 멜버른공항 → 멜버른 (자동차, 82km)",
       status: "완료",
     },
     {
@@ -113,7 +129,8 @@ export default function DataListTable() {
       departure: "광주",
       arrival: "시드니",
       transportMode: "복합",
-      route: "광주 (자동차, 54km) → 무안국제공항 (항공, 4,185km) → 킹스포드 스미스공항 → 시드니 (자동차, 57km)",
+      route:
+        "광주 (자동차, 54km) → 무안국제공항 (항공, 4,185km) → 킹스포드 스미스공항 → 시드니 (자동차, 57km)",
       status: "완료",
     },
     {
@@ -121,7 +138,8 @@ export default function DataListTable() {
       departure: "대구",
       arrival: "쿠알라룸푸르",
       transportMode: "복합",
-      route: "대구 (자동차, 67km) → 대구국제공항 (항공, 0km) → 쿠알라룸푸르 (자동차, 0km)",
+      route:
+        "대구 (자동차, 67km) → 대구국제공항 (항공, 0km) → 쿠알라룸푸르 (자동차, 0km)",
       status: "처리 실패",
     },
     {
@@ -129,7 +147,8 @@ export default function DataListTable() {
       departure: "인천",
       arrival: "자카르타",
       transportMode: "복합",
-      route: "인천 (자동차, 97km) → 인천국제공항 (항공, 0km) → 자카르타 (자동차, 0km)",
+      route:
+        "인천 (자동차, 97km) → 인천국제공항 (항공, 0km) → 자카르타 (자동차, 0km)",
       status: "처리 실패",
     },
     {
@@ -137,7 +156,8 @@ export default function DataListTable() {
       departure: "대전",
       arrival: "멜버른",
       transportMode: "복합",
-      route: "대전 (자동차, 130km) → 청주국제공항 (항공, 4,187km) → 멜버른공항 → 멜버른 (자동차, 59km)",
+      route:
+        "대전 (자동차, 130km) → 청주국제공항 (항공, 4,187km) → 멜버른공항 → 멜버른 (자동차, 59km)",
       status: "완료",
     },
   ];
@@ -152,7 +172,13 @@ export default function DataListTable() {
       departure: item.departure,
       arrival: item.arrival,
       transportMode: item.transportMode,
-      segments: [],
+      segments: [
+        {
+          mode: item.transportMode,
+          distance: 0,
+          location: item.departure,
+        },
+      ],
     };
     setSelectedRoute(routeDetail);
   };
@@ -165,7 +191,9 @@ export default function DataListTable() {
     <div className="bg-white rounded-lg border border-secondary-200 overflow-hidden">
       {/* 테이블 헤더 */}
       <div className="flex justify-between items-center p-6 border-b border-secondary-200">
-        <h2 className="text-xl font-bold text-secondary-900">상세 경로 데이터</h2>
+        <h2 className="text-xl font-bold text-secondary-900">
+          상세 경로 데이터
+        </h2>
         <div className="flex gap-3">
           <select className="px-3 py-2 border border-secondary-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
             <option value="all">전체</option>
@@ -175,7 +203,7 @@ export default function DataListTable() {
           <Button variant="secondary" size="sm">
             📥 엑셀 저장
           </Button>
-          <Button variant="primary" size="sm">
+          <Button variant="default" size="sm">
             🔽 프로젝트 저장
           </Button>
         </div>
@@ -233,7 +261,9 @@ export default function DataListTable() {
                   </div>
                 </td>
                 <td className="px-4 py-4">
-                  <Badge variant={item.status === "완료" ? "success" : "destructive"}>
+                  <Badge
+                    variant={item.status === "완료" ? "success" : "destructive"}
+                  >
                     {item.status}
                   </Badge>
                 </td>
@@ -246,7 +276,8 @@ export default function DataListTable() {
       {/* 페이지네이션 */}
       <div className="flex justify-between items-center px-6 py-4 border-t border-secondary-200">
         <div className="text-sm text-secondary-600">
-          총 {dataItems.length}개 항목 중 {startIndex + 1}-{Math.min(startIndex + itemsPerPage, dataItems.length)}개 표시
+          총 {dataItems.length}개 항목 중 {startIndex + 1}-
+          {Math.min(startIndex + itemsPerPage, dataItems.length)}개 표시
         </div>
         <div className="flex gap-2">
           <Button
@@ -260,7 +291,7 @@ export default function DataListTable() {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <Button
               key={page}
-              variant={currentPage === page ? "primary" : "secondary"}
+              variant={currentPage === page ? "default" : "secondary"}
               size="sm"
               onClick={() => setCurrentPage(page)}
               className="min-w-[40px]"
@@ -271,7 +302,9 @@ export default function DataListTable() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
           >
             다음
@@ -282,7 +315,8 @@ export default function DataListTable() {
       {/* 사이드 디테일 패널 */}
       {selectedRoute && (
         <RouteDetailPanel
-          selectedRoute={selectedRoute}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          selectedRoute={selectedRoute as any}
           onClose={handleClosePanel}
         />
       )}

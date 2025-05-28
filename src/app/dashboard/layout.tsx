@@ -43,10 +43,11 @@ export default function DashboardLayout({
       <LeftSidebar
         className="fixed left-0 top-0 h-screen z-40"
         onToggle={setIsSidebarCollapsed}
+        //isCollapsed={isSidebarCollapsed}
       />
 
       {/* Main Content Area */}
-      <div className={`flex-1 transition-all duration-300`}>
+      <div className={`flex-1 transition-all duration-300 `}>
         {/* Header */}
         <header className="bg-white dark:bg-secondary-800 shadow-sm border-b border-primary-100 dark:border-secondary-700">
           <div className="px-4 sm:px-6 lg:px-8">

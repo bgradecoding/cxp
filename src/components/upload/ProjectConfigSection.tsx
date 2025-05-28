@@ -23,7 +23,9 @@ export default function ProjectConfigSection() {
         <div className="space-y-5">
           {/* 프로젝트명 */}
           <div>
-            <label className="block font-bold text-secondary-900 mb-2">프로젝트명 *</label>
+            <label className="block font-bold text-secondary-900 mb-2">
+              프로젝트명 *
+            </label>
             <input
               type="text"
               value={projectName}
@@ -36,7 +38,9 @@ export default function ProjectConfigSection() {
           {/* 분석 기준일과 우선순위 */}
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="block font-bold text-secondary-900 mb-2">분석 기준일</label>
+              <label className="block font-bold text-secondary-900 mb-2">
+                분석 기준일
+              </label>
               <input
                 type="date"
                 value={analysisDate}
@@ -45,7 +49,9 @@ export default function ProjectConfigSection() {
               />
             </div>
             <div className="flex-1">
-              <label className="block font-bold text-secondary-900 mb-2">우선순위</label>
+              <label className="block font-bold text-secondary-900 mb-2">
+                우선순위
+              </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
@@ -60,7 +66,9 @@ export default function ProjectConfigSection() {
 
           {/* 설명 */}
           <div>
-            <label className="block font-bold text-secondary-900 mb-2">설명</label>
+            <label className="block font-bold text-secondary-900 mb-2">
+              설명
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -72,7 +80,9 @@ export default function ProjectConfigSection() {
 
           {/* 처리 옵션 */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="font-bold text-secondary-900 mb-3">⚙️ 처리 옵션</div>
+            <div className="font-bold text-secondary-900 mb-3">
+              ⚙️ 처리 옵션
+            </div>
             <div className="space-y-2">
               <label className="flex items-center">
                 <input
@@ -81,7 +91,9 @@ export default function ProjectConfigSection() {
                   onChange={(e) => setIncludeGoogleMaps(e.target.checked)}
                   className="mr-2"
                 />
-                <span className="text-sm text-secondary-700">구글맵 경로 캡처 포함</span>
+                <span className="text-sm text-secondary-700">
+                  구글맵 경로 캡처 포함
+                </span>
               </label>
               <label className="flex items-center">
                 <input
@@ -90,7 +102,9 @@ export default function ProjectConfigSection() {
                   onChange={(e) => setIncludeKakaoMaps(e.target.checked)}
                   className="mr-2"
                 />
-                <span className="text-sm text-secondary-700">카카오맵 경로 캡처 포함</span>
+                <span className="text-sm text-secondary-700">
+                  카카오맵 경로 캡처 포함
+                </span>
               </label>
               <label className="flex items-center">
                 <input
@@ -99,7 +113,9 @@ export default function ProjectConfigSection() {
                   onChange={(e) => setRemoveDuplicates(e.target.checked)}
                   className="mr-2"
                 />
-                <span className="text-sm text-secondary-700">중복 데이터 자동 제거</span>
+                <span className="text-sm text-secondary-700">
+                  중복 데이터 자동 제거
+                </span>
               </label>
             </div>
           </div>
@@ -115,7 +131,7 @@ export default function ProjectConfigSection() {
           <Button variant="secondary" size="lg">
             임시저장
           </Button>
-          <Button variant="primary" size="lg">
+          <Button variant="default" size="lg">
             처리 시작
           </Button>
         </div>
@@ -123,7 +139,8 @@ export default function ProjectConfigSection() {
 
       {/* 주의사항 */}
       <div className="text-xs text-secondary-500 italic mt-3">
-        * 처리 시작 후에는 프로젝트 설정을 변경할 수 없습니다. 모든 설정을 확인해주세요.
+        * 처리 시작 후에는 프로젝트 설정을 변경할 수 없습니다. 모든 설정을
+        확인해주세요.
       </div>
     </>
   );

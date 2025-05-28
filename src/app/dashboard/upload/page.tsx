@@ -19,7 +19,7 @@ export default function UploadPage() {
           새 프로젝트 생성
         </h1>
         <div className="text-sm text-secondary-600 dark:text-secondary-300">
-          대시보드 > 새 프로젝트 생성
+          대시보드 &gt; 새 프로젝트 생성
         </div>
       </div>
 
