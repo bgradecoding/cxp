@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LCA 운송 증적 수집 시스템 - 파일 업로드</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .wireframe {
+        background: white;
+        border: 2px solid #666;
+        margin: 20px;
+        min-height: 900px;
+      }
+
+      .header {
+        background: #e8e8e8;
+        padding: 20px;
+        border-bottom: 2px solid #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-area {
+        border: 1px solid #999;
+        padding: 10px 20px;
+        background: #f0f0f0;
+      }
+
+      .breadcrumb {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .main-content {
+        display: flex;
+        min-height: 800px;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: #f8f8f8;
+        border-right: 2px solid #666;
+        padding: 20px;
+      }
+
+      .nav-item {
+        border: 1px solid #999;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+        cursor: pointer;
+      }
+
+      .nav-item.active {
+        background: #d0d0d0;
+        font-weight: bold;
+      }
+
+      .content-area {
+        flex: 1;
+        padding: 30px;
+      }
+
+      .page-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      .step-indicator {
+        display: flex;
+        margin-bottom: 40px;
+        justify-content: center;
+      }
+
+      .step {
+        display: flex;
+        align-items: center;
+        margin: 0 20px;
+      }
+
+      .step-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #ccc;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .step.active .step-number {
+        background: #007bff;
+      }
+
+      .step.completed .step-number {
+        background: #28a745;
+      }
+
+      .upload-section {
+        background: white;
+        border: 2px solid #666;
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+      }
+
+      .file-drop-zone {
+        border: 3px dashed #007bff;
+        background: #f8f9fa;
+        padding: 50px;
+        text-align: center;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .file-drop-zone:hover {
+        background: #e3f2fd;
+      }
+
+      .upload-icon {
+        font-size: 48px;
+        color: #007bff;
+        margin-bottom: 15px;
+      }
+
+      .upload-text {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .upload-subtext {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .file-input-group {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .template-section {
+        background: #f8f9fa;
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .uploaded-files {
+        margin-top: 20px;
+      }
+
+      .file-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background: white;
+      }
+
+      .file-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        color: #28a745;
+      }
+
+      .file-info {
+        flex: 1;
+      }
+
+      .file-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .file-details {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .file-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-small {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+
+      .validation-section {
+        background: white;
+        border: 2px solid #666;
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+
+      .validation-result {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .validation-error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .data-preview {
+        overflow-x: auto;
+        margin-top: 20px;
+      }
+
+      .preview-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .preview-table th,
+      .preview-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .preview-table th {
+        background: #f0f0f0;
+        font-weight: bold;
+      }
+
+      .project-config {
+        background: white;
+        border: 2px solid #666;
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+
+      .form-input.half-width {
+        width: 48%;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 4%;
+      }
+
+      .bottom-actions {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 0;
+        border-top: 1px solid #ccc;
+      }
+
+      .btn-large {
+        padding: 15px 30px;
+        font-size: 16px;
+      }
+
+      .error-text {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      .success-text {
+        color: #28a745;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .annotation {
+        font-size: 11px;
+        color: #666;
+        font-style: italic;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wireframe">
+      <!-- 헤더 영역 -->
+      <div class="header">
+        <div class="logo-area">LCA 운송 증적 수집 시스템</div>
+        <div class="breadcrumb">대시보드 > 새 프로젝트 생성</div>
+      </div>
+
+      <div class="main-content">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+          <div class="nav-item" onclick="window.location.href='main.html'">
+            📊 대시보드
+          </div>
+          <div
+            class="nav-item active"
+            onclick="window.location.href='upload.html'"
+          >
+            📁 새 프로젝트
+          </div>
+          <div
+            class="nav-item"
+            onclick="window.location.href='processing.html'"
+          >
+            📋 프로젝트 관리
+          </div>
+          <div class="nav-item">🗺️ 지도 설정</div>
+          <div class="nav-item">⚙️ 시스템 설정</div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="content-area">
+          <div class="page-title">새 프로젝트 생성</div>
+
+          <!-- 단계 표시기 -->
+          <div class="step-indicator">
+            <div class="step active">
+              <div class="step-number">1</div>
+              <span>파일 업로드</span>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <span>데이터 검증</span>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <span>프로젝트 설정</span>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <span>처리 시작</span>
+            </div>
+          </div>
+
+          <!-- 파일 업로드 섹션 -->
+          <div class="upload-section">
+            <div class="section-title">1. 파일 업로드</div>
+
+            <!-- 템플릿 안내 -->
+            <div class="template-section">
+              <strong>📋 업로드 파일 형식 안내</strong>
+              <ul style="margin: 10px 0 10px 20px">
+                <li>지원 형식: Excel (.xlsx, .xls), CSV (.csv)</li>
+                <li>최대 파일 크기: 10MB</li>
+                <li>최대 데이터 행: 1,000개</li>
+              </ul>
+              <button class="btn btn-secondary">📥 템플릿 다운로드</button>
+            </div>
+
+            <!-- 드래그 앤 드롭 영역 -->
+            <div class="file-drop-zone">
+              <div class="upload-icon">📁</div>
+              <div class="upload-text">
+                파일을 드래그하여 놓거나 클릭하여 선택하세요
+              </div>
+              <div class="upload-subtext">
+                Excel 또는 CSV 파일만 업로드 가능합니다
+              </div>
+            </div>
+
+            <div class="file-input-group">
+              <button class="btn btn-primary">파일 선택</button>
+              <button class="btn btn-secondary">샘플 데이터 로드</button>
+            </div>
+
+            <!-- 업로드된 파일 목록 -->
+            <div class="uploaded-files">
+              <div class="file-item">
+                <div class="file-icon">📊</div>
+                <div class="file-info">
+                  <div class="file-name">2024년_1분기_운송데이터.xlsx</div>
+                  <div class="file-details">
+                    크기: 2.3MB | 업로드: 2024-03-25 14:30 | 행 수: 487개
+                  </div>
+                </div>
+                <div class="file-actions">
+                  <button class="btn btn-primary btn-small">미리보기</button>
+                  <button class="btn btn-secondary btn-small">삭제</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 데이터 검증 섹션 -->
+          <div class="validation-section">
+            <div class="section-title">2. 데이터 검증</div>
+
+            <div class="info-box">
+              <strong>ℹ️ 필수 컬럼 확인</strong><br />
+              출발주소, 도착주소 컬럼이 포함되어야 합니다. 컬럼명은 자동으로
+              매핑됩니다.
+            </div>
+
+            <div class="validation-result">
+              <strong>✅ 검증 완료</strong>
+              <ul style="margin: 10px 0 0 20px">
+                <li>총 487개 행 데이터 확인</li>
+                <li>출발주소 컬럼: "출발지" (487개 유효)</li>
+                <li>도착주소 컬럼: "도착지" (487개 유효)</li>
+                <li>빈 값: 0개</li>
+                <li>중복 데이터: 3개 발견</li>
+              </ul>
+            </div>
+
+            <!-- 데이터 미리보기 -->
+            <div class="data-preview">
+              <strong>데이터 미리보기 (상위 5개 행)</strong>
+              <table class="preview-table">
+                <thead>
+                  <tr>
+                    <th>번호</th>
+                    <th>출발지</th>
+                    <th>도착지</th>
+                    <th>수단</th>
+                    <th>검증상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Hamburg, Germany</td>
+                    <td>서울시 강남구 테헤란로 123</td>
+                    <td>항공</td>
+                    <td style="color: green">✅ 유효</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Shanghai, China</td>
+                    <td>경기도 화성시 동탄대로 456</td>
+                    <td>해상</td>
+                    <td style="color: green">✅ 유효</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>부산시 해운대구 센텀중앙로 78</td>
+                    <td>인천시 연수구 송도국제대로 90</td>
+                    <td>항공</td>
+                    <td style="color: green">✅ 유효</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Tokyo, Japan</td>
+                    <td>대전시 유성구 대덕대로 234</td>
+                    <td>해상</td>
+                    <td style="color: green">✅ 유효</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Los Angeles, USA</td>
+                    <td>광주시 북구 첨단과기로 567</td>
+                    <td></td>
+                    <td style="color: purple">☯️ 수단 자동 매핑</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 프로젝트 설정 섹션 -->
+          <div class="project-config">
+            <div class="section-title">3. 프로젝트 설정</div>
+
+            <div class="form-group">
+              <label class="form-label">프로젝트명 *</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="예: 2024년 1분기 운송 분석"
+                value="2024년 1분기 운송 분석"
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group" style="width: 48%">
+                <label class="form-label">분석 기준일</label>
+                <input type="date" class="form-input" value="2024-03-25" />
+              </div>
+              <div class="form-group" style="width: 48%">
+                <label class="form-label">우선순위</label>
+                <select class="form-input">
+                  <option>보통</option>
+                  <option>높음</option>
+                  <option>낮음</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">설명</label>
+              <textarea
+                class="form-input"
+                rows="3"
+                placeholder="프로젝트에 대한 간단한 설명을 입력하세요"
+              ></textarea>
+            </div>
+
+            <div class="info-box">
+              <strong>⚙️ 처리 옵션</strong><br />
+              <label style="margin-top: 10px; display: block">
+                <input type="checkbox" checked /> 구글맵 경로 캡처 포함
+              </label>
+              <label style="margin-top: 5px; display: block">
+                <input type="checkbox" checked /> 카카오맵 경로 캡처 포함
+              </label>
+              <label style="margin-top: 5px; display: block">
+                <input type="checkbox" /> 중복 데이터 자동 제거
+              </label>
+            </div>
+          </div>
+
+          <!-- 하단 액션 버튼 -->
+          <div class="bottom-actions">
+            <button class="btn btn-secondary btn-large">취소</button>
+            <div>
+              <button class="btn btn-secondary btn-large">임시저장</button>
+              <button
+                class="btn btn-primary btn-large"
+                style="margin-left: 10px"
+              >
+                처리 시작
+              </button>
+            </div>
+          </div>
+
+          <div class="annotation">
+            * 처리 시작 후에는 프로젝트 설정을 변경할 수 없습니다. 모든 설정을
+            확인해주세요.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

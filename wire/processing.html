@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LCA 운송 증적 수집 시스템 - 처리 현황 모니터링</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .wireframe {
+        background: white;
+        border: 2px solid #666;
+        margin: 20px;
+        min-height: 900px;
+      }
+
+      .header {
+        background: #e8e8e8;
+        padding: 20px;
+        border-bottom: 2px solid #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-area {
+        border: 1px solid #999;
+        padding: 10px 20px;
+        background: #f0f0f0;
+      }
+
+      .breadcrumb {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        background: #28a745;
+        color: white;
+      }
+
+      .main-content {
+        display: flex;
+        min-height: 800px;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: #f8f8f8;
+        border-right: 2px solid #666;
+        padding: 20px;
+      }
+
+      .nav-item {
+        border: 1px solid #999;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+        cursor: pointer;
+      }
+
+      .nav-item.active {
+        background: #d0d0d0;
+        font-weight: bold;
+      }
+
+      .content-area {
+        flex: 1;
+        padding: 30px;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .page-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .control-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 4px;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-warning {
+        background: #ffc107;
+        color: #212529;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .overview-section {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .progress-panel {
+        background: white;
+        border: 2px solid #666;
+        padding: 25px;
+      }
+
+      .info-panel {
+        background: white;
+        border: 2px solid #666;
+        padding: 25px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+      }
+
+      .overall-progress {
+        margin-bottom: 30px;
+      }
+
+      .progress-bar-container {
+        background: #e9ecef;
+        border: 2px solid #666;
+        height: 30px;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        color: #333;
+        z-index: 10;
+      }
+
+      .progress-details {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .stage-progress {
+        margin-bottom: 20px;
+      }
+
+      .stage-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+      }
+
+      .stage-item.active {
+        background: #e3f2fd;
+        border-color: #007bff;
+      }
+
+      .stage-item.completed {
+        background: #d4edda;
+        border-color: #28a745;
+      }
+
+      .stage-info {
+        flex: 1;
+      }
+
+      .stage-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stage-desc {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .stage-status {
+        text-align: right;
+        min-width: 120px;
+      }
+
+      .stage-count {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .stage-progress-bar {
+        width: 100px;
+        height: 8px;
+        background: #e9ecef;
+        border: 1px solid #ccc;
+        margin-top: 5px;
+      }
+
+      .stage-progress-fill {
+        height: 100%;
+        background: #007bff;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .info-item {
+        padding: 15px;
+        background: #f8f9fa;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+
+      .info-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 5px;
+      }
+
+      .info-label {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .time-info {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .log-section {
+        background: white;
+        border: 2px solid #666;
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+
+      .log-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .log-filters {
+        display: flex;
+        gap: 10px;
+      }
+
+      .filter-btn {
+        padding: 5px 12px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .filter-btn.active {
+        background: #007bff;
+        color: white;
+      }
+
+      .log-container {
+        border: 1px solid #ccc;
+        height: 300px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      .log-entry {
+        margin-bottom: 5px;
+        padding: 3px 0;
+      }
+
+      .log-time {
+        color: #666;
+        margin-right: 10px;
+      }
+
+      .log-level {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .log-info {
+        color: #17a2b8;
+      }
+      .log-success {
+        color: #28a745;
+      }
+      .log-warning {
+        color: #ffc107;
+      }
+      .log-error {
+        color: #dc3545;
+      }
+
+      .detail-section {
+        background: white;
+        border: 2px solid #666;
+        padding: 25px;
+      }
+
+      .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .detail-table th,
+      .detail-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .detail-table th {
+        background: #f0f0f0;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+      }
+
+      .detail-container {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .status-cell {
+        font-weight: bold;
+      }
+
+      .status-pending {
+        color: #6c757d;
+      }
+      .status-processing {
+        color: #007bff;
+      }
+      .status-completed {
+        color: #28a745;
+      }
+      .status-failed {
+        color: #dc3545;
+      }
+
+      .error-details {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 15px;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      .auto-refresh {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .refresh-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #28a745;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .estimated-time {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        padding: 10px;
+        margin-top: 15px;
+        font-size: 14px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wireframe">
+      <!-- 헤더 영역 -->
+      <div class="header">
+        <div class="logo-area">LCA 운송 증적 수집 시스템</div>
+        <div class="breadcrumb">
+          대시보드 > 프로젝트 관리 > 2024년 1분기 운송 분석 > 처리 현황
+        </div>
+        <div class="status-indicator">
+          <div class="status-badge">🔄 처리 중</div>
+          <div class="auto-refresh">
+            <div class="refresh-indicator"></div>
+            자동 새로고침
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+          <div class="nav-item" onclick="window.location.href='main.html'">
+            📊 대시보드
+          </div>
+          <div class="nav-item" onclick="window.location.href='upload.html'">
+            📁 새 프로젝트
+          </div>
+          <div
+            class="nav-item active"
+            onclick="window.location.href='processing.html'"
+          >
+            📋 프로젝트 관리
+          </div>
+          <div class="nav-item">🗺️ 지도 설정</div>
+          <div class="nav-item">⚙️ 시스템 설정</div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="content-area">
+          <div class="page-header">
+            <div class="page-title">유럽 수입 제품 운송 평가 - 처리 현황</div>
+            <div class="control-buttons">
+              <button class="btn btn-warning">일시정지</button>
+              <button class="btn btn-danger">중단</button>
+              <button class="btn btn-secondary">새로고침</button>
+            </div>
+          </div>
+
+          <!-- 전체 진행률 및 정보 -->
+          <div class="overview-section">
+            <div class="progress-panel">
+              <div class="section-title">🚀 전체 진행률</div>
+
+              <div class="overall-progress">
+                <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 68%"></div>
+                  <div class="progress-text">68% (332/487)</div>
+                </div>
+                <div class="progress-details">
+                  332개 완료, 155개 남음 | 예상 완료 시간: 약 4분 후
+                </div>
+              </div>
+
+              <div class="stage-progress">
+                <div class="stage-item completed">
+                  <div class="stage-info">
+                    <div class="stage-name">✅ 1단계: 데이터 전처리</div>
+                    <div class="stage-desc">주소 정제 및 유효성 검사</div>
+                  </div>
+                  <div class="stage-status">
+                    <div class="stage-count">487/487</div>
+                    <div class="stage-progress-bar">
+                      <div
+                        class="stage-progress-fill"
+                        style="width: 100%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stage-item completed">
+                  <div class="stage-info">
+                    <div class="stage-name">✅ 2단계: 국제공항 매칭</div>
+                    <div class="stage-desc">외국 주소의 최근접 공항 찾기</div>
+                  </div>
+                  <div class="stage-status">
+                    <div class="stage-count">487/487</div>
+                    <div class="stage-progress-bar">
+                      <div
+                        class="stage-progress-fill"
+                        style="width: 100%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stage-item active">
+                  <div class="stage-info">
+                    <div class="stage-name">🔄 3단계: 구글맵 거리 계산</div>
+                    <div class="stage-desc">출발지 → 공항 거리 및 캡처</div>
+                  </div>
+                  <div class="stage-status">
+                    <div class="stage-count">332/487</div>
+                    <div class="stage-progress-bar">
+                      <div class="stage-progress-fill" style="width: 68%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stage-item">
+                  <div class="stage-info">
+                    <div class="stage-name">⏳ 4단계: 카카오맵 거리 계산</div>
+                    <div class="stage-desc">인천공항 → 도착지 거리 및 캡처</div>
+                  </div>
+                  <div class="stage-status">
+                    <div class="stage-count">0/487</div>
+                    <div class="stage-progress-bar">
+                      <div class="stage-progress-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stage-item">
+                  <div class="stage-info">
+                    <div class="stage-name">⏳ 5단계: 결과 정리</div>
+                    <div class="stage-desc">거리 합산 및 보고서 생성</div>
+                  </div>
+                  <div class="stage-status">
+                    <div class="stage-count">0/487</div>
+                    <div class="stage-progress-bar">
+                      <div class="stage-progress-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-panel">
+              <div class="section-title">📊 처리 정보</div>
+
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-value">487</div>
+                  <div class="info-label">총 데이터 수</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">332</div>
+                  <div class="info-label">처리 완료</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">2</div>
+                  <div class="info-label">오류 발생</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-value">155</div>
+                  <div class="info-label">대기 중</div>
+                </div>
+              </div>
+
+              <div class="time-info">
+                <strong>⏰ 시간 정보</strong><br />
+                시작시간: 2024-03-25 14:35:22<br />
+                경과시간: 7분 43초<br />
+                예상완료: 2024-03-25 14:47:00<br />
+                평균처리속도: 0.8개/초
+              </div>
+
+              <div class="estimated-time">⚡ 약 4분 후 완료 예정</div>
+            </div>
+          </div>
+          <!-- 상세 처리 현황 -->
+          <div class="detail-section">
+            <div class="section-title">📋 상세 처리 현황</div>
+
+            <div class="detail-container">
+              <table class="detail-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>출발지</th>
+                    <th>도착지</th>
+                    <th>매칭 공항</th>
+                    <th>구글맵 거리</th>
+                    <th>카카오맵 거리</th>
+                    <th>상태</th>
+                    <th>처리시간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>332</td>
+                    <td>Hamburg, Germany</td>
+                    <td>서울시 강남구 테헤란로 123</td>
+                    <td>Hamburg Airport</td>
+                    <td>15km</td>
+                    <td>-</td>
+                    <td class="status-cell status-processing">처리중</td>
+                    <td>14:42:15</td>
+                  </tr>
+                  <tr>
+                    <td>331</td>
+                    <td>Shanghai, China</td>
+                    <td>경기도 화성시 동탄대로 456</td>
+                    <td>Pudong Airport</td>
+                    <td>42km</td>
+                    <td>67km</td>
+                    <td class="status-cell status-completed">완료</td>
+                    <td>14:42:10</td>
+                  </tr>
+                  <tr>
+                    <td>330</td>
+                    <td>부산시 해운대구</td>
+                    <td>인천시 연수구 송도</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>425km</td>
+                    <td class="status-cell status-completed">완료</td>
+                    <td>14:42:05</td>
+                  </tr>
+                  <tr>
+                    <td>329</td>
+                    <td>Tokyo, Japan</td>
+                    <td>대전시 유성구 대덕대로 234</td>
+                    <td>Narita Airport</td>
+                    <td>65km</td>
+                    <td>89km</td>
+                    <td class="status-cell status-completed">완료</td>
+                    <td>14:42:02</td>
+                  </tr>
+                  <tr>
+                    <td>328</td>
+                    <td>Los Angeles, USA</td>
+                    <td>광주시 북구 첨단과기로 567</td>
+                    <td>LAX Airport</td>
+                    <td>28km</td>
+                    <td>134km</td>
+                    <td class="status-cell status-completed">완료</td>
+                    <td>14:41:58</td>
+                  </tr>
+                  <tr>
+                    <td>327</td>
+                    <td>Unknown City, Germany</td>
+                    <td>서울시 중구 명동길 78</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="status-cell status-failed">실패</td>
+                    <td>14:41:55</td>
+                  </tr>
+                  <tr>
+                    <td>326</td>
+                    <td>Paris, France</td>
+                    <td>부산시 수영구 광안대로 890</td>
+                    <td>Charles de Gaulle</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="status-cell status-pending">대기</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="error-details"
+              style="cursor: pointer"
+              onclick="window.location.href='error.html'"
+            >
+              <strong>⚠️ 오류 발생 항목 (2개)</strong><br />
+              • ID 327: 주소 해석 실패 - "Unknown City, Germany"<br />
+              • ID 298: API 호출 한도 초과 - 잠시 후 재시도 예정
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

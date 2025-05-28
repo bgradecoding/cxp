@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LCA 운송 증적 수집 시스템 - 결과 확인 및 오류 보정</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      .wireframe {
+        background: white;
+        border: 2px solid #666;
+        margin: 20px;
+        min-height: 900px;
+      }
+
+      .header {
+        background: #e8e8e8;
+        padding: 20px;
+        border-bottom: 2px solid #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-area {
+        border: 1px solid #999;
+        padding: 10px 20px;
+        background: #f0f0f0;
+      }
+
+      .breadcrumb {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .status-completed {
+        background: #28a745;
+        color: white;
+      }
+
+      .status-warning {
+        background: #ffc107;
+        color: #212529;
+      }
+
+      .main-content {
+        display: flex;
+        min-height: 800px;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: #f8f8f8;
+        border-right: 2px solid #666;
+        padding: 20px;
+      }
+
+      .nav-item {
+        border: 1px solid #999;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+        cursor: pointer;
+      }
+
+      .nav-item.active {
+        background: #d0d0d0;
+        font-weight: bold;
+      }
+
+      .content-area {
+        flex: 1;
+        padding: 30px;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .page-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 4px;
+      }
+
+      .btn-warning {
+        background: #ffc107;
+        color: #212529;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .error-summary-section {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .error-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        background: white;
+        border: 1px solid #ffc107;
+        padding: 15px;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #dc3545;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .bulk-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .error-table-section {
+        background: white;
+        border: 2px solid #666;
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+
+      .table-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .error-filters {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .filter-btn {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        font-size: 12px;
+        border-radius: 4px;
+      }
+
+      .filter-btn.active {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+      }
+
+      .error-table-container {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .error-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .error-table th,
+      .error-table td {
+        border: 1px solid #ccc;
+        padding: 12px 8px;
+        text-align: left;
+      }
+
+      .error-table th {
+        background: #f8d7da;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+      }
+
+      .error-row {
+        background: #fff5f5;
+      }
+
+      .error-type {
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: bold;
+      }
+
+      .error-address {
+        background: #ffeaa7;
+        color: #856404;
+      }
+      .error-api {
+        background: #ffcccc;
+        color: #721c24;
+      }
+      .error-network {
+        background: #e2e3e5;
+        color: #383d41;
+      }
+
+      .correction-cell {
+        position: relative;
+      }
+
+      .correction-input {
+        width: 200px;
+        padding: 6px;
+        border: 1px solid #007bff;
+        font-size: 11px;
+        border-radius: 3px;
+      }
+
+      .suggestion-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        border-top: none;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 100;
+        font-size: 11px;
+      }
+
+      .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
+
+      .suggestion-item:hover {
+        background: #f0f8ff;
+      }
+
+      .suggestion-source {
+        font-size: 9px;
+        color: #666;
+        float: right;
+      }
+
+      .map-preview {
+        width: 150px;
+        height: 100px;
+        background: #e9ecef;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #666;
+        border-radius: 3px;
+      }
+
+      .action-buttons-cell {
+        white-space: nowrap;
+      }
+
+      .btn-mini {
+        padding: 4px 8px;
+        font-size: 10px;
+        margin-right: 3px;
+        border-radius: 3px;
+      }
+
+      .correction-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: white;
+        border: 2px solid #666;
+        padding: 30px;
+        width: 80%;
+        max-width: 900px;
+        max-height: 80%;
+        overflow-y: auto;
+        border-radius: 8px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 15px;
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .correction-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 25px;
+      }
+
+      .correction-panel {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 4px;
+      }
+
+      .panel-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #dc3545;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 12px;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        border-radius: 3px;
+      }
+
+      .map-service-tabs {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+
+      .tab-btn {
+        padding: 8px 15px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        font-size: 12px;
+        border-radius: 3px 3px 0 0;
+      }
+
+      .tab-btn.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      .map-result {
+        border: 1px solid #ccc;
+        padding: 15px;
+        min-height: 200px;
+        background: #f8f9fa;
+        border-radius: 0 0 3px 3px;
+      }
+
+      .search-result {
+        margin-bottom: 10px;
+        padding: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .search-result:hover {
+        border-color: #007bff;
+      }
+
+      .search-result.selected {
+        border-color: #007bff;
+        background: #e3f2fd;
+      }
+
+      .result-address {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .result-details {
+        font-size: 11px;
+        color: #666;
+      }
+
+      .confidence-score {
+        float: right;
+        padding: 2px 6px;
+        background: #28a745;
+        color: white;
+        border-radius: 10px;
+        font-size: 9px;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .validation-info {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .progress-section {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 20px;
+        background: #e9ecef;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .learning-banner {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .learning-banner strong {
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wireframe">
+      <!-- 헤더 영역 -->
+      <div class="header">
+        <div class="logo-area">LCA 운송 증적 수집 시스템</div>
+        <div class="breadcrumb">
+          대시보드 > 프로젝트 관리 > 2024년 1분기 운송 분석 > 오류 보정
+        </div>
+        <div class="status-indicator">
+          <div class="status-badge status-warning">⚠️ 보정 필요</div>
+          <div style="font-size: 12px; color: #666">2개 항목 미완료</div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+          <div class="nav-item" onclick="window.location.href='main.html'">
+            📊 대시보드
+          </div>
+          <div class="nav-item" onclick="window.location.href='upload.html'">
+            📁 새 프로젝트
+          </div>
+          <div
+            class="nav-item active"
+            onclick="window.location.href='processing.html'"
+          >
+            📋 프로젝트 관리
+          </div>
+          <div class="nav-item">🗺️ 지도 설정</div>
+          <div class="nav-item">⚙️ 시스템 설정</div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="content-area">
+          <div class="page-header">
+            <div class="page-title">오류 항목 보정</div>
+            <div class="action-buttons">
+              <button class="btn btn-success">✅ 보정 완료</button>
+              <button class="btn btn-primary">🔄 전체 재처리</button>
+            </div>
+          </div>
+
+          <!-- 학습 기능 안내 -->
+          <div class="learning-banner">
+            <strong>🧠 스마트 학습 기능</strong> - 이전 보정 이력을 학습하여
+            유사한 주소에 대한 제안을 제공합니다. 보정된 주소는 향후 자동 매핑에
+            활용됩니다.
+          </div>
+
+          <!-- 오류 요약 -->
+          <div class="error-summary-section">
+            <div class="section-title">⚠️ 오류 항목 요약</div>
+
+            <div class="error-stats">
+              <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">총 오류 건수</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">주소 오류</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">API 오류</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">보정 완료</div>
+              </div>
+            </div>
+
+            <div class="bulk-actions">
+              <strong>일괄 작업:</strong>
+              <button class="btn btn-secondary btn-mini">모두 선택</button>
+              <button class="btn btn-primary btn-mini">선택 항목 보정</button>
+              <button class="btn btn-danger btn-mini">선택 항목 제외</button>
+            </div>
+          </div>
+
+          <!-- 보정 진행률 -->
+          <div class="progress-section">
+            <strong>📈 보정 진행률</strong>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text">0/2 완료 (0%)</div>
+          </div>
+
+          <!-- 오류 항목 테이블 -->
+          <div class="error-table-section">
+            <div class="section-title">🔧 오류 항목 보정</div>
+
+            <div class="table-controls">
+              <div class="error-filters">
+                <strong>필터:</strong>
+                <button class="filter-btn active">전체</button>
+                <button class="filter-btn">주소 오류</button>
+                <button class="filter-btn">API 오류</button>
+                <button class="filter-btn">네트워크 오류</button>
+              </div>
+              <div>
+                <button class="btn btn-secondary">💾 학습 데이터 저장</button>
+              </div>
+            </div>
+
+            <div class="error-table-container">
+              <table class="error-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" /></th>
+                    <th>ID</th>
+                    <th>오류 유형</th>
+                    <th>원본 주소</th>
+                    <th>보정된 주소</th>
+                    <th>지도 미리보기</th>
+                    <th>신뢰도</th>
+                    <th>작업</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="error-row">
+                    <td><input type="checkbox" /></td>
+                    <td>327</td>
+                    <td>
+                      <span class="error-type error-address">주소 오류</span>
+                    </td>
+                    <td>
+                      <div style="color: #dc3545; font-weight: bold">
+                        Unknown City, Germany
+                      </div>
+                      <div style="font-size: 10px; color: #666">
+                        → 서울시 중구 명동길 78
+                      </div>
+                    </td>
+                    <td class="correction-cell">
+                      <input
+                        type="text"
+                        class="correction-input"
+                        placeholder="보정된 주소 입력..."
+                        value="Munich, Germany"
+                      />
+                      <div class="suggestion-dropdown" style="display: block">
+                        <div class="suggestion-item">
+                          <strong>Munich, Germany</strong>
+                          <span class="suggestion-source">구글맵</span>
+                          <div style="font-size: 9px; color: #666">
+                            뮌헨, 독일 바이에른주
+                          </div>
+                        </div>
+                        <div class="suggestion-item">
+                          <strong>Cologne, Germany</strong>
+                          <span class="suggestion-source">구글맵</span>
+                          <div style="font-size: 9px; color: #666">
+                            쾰른, 독일 노르트라인베스트팔렌주
+                          </div>
+                        </div>
+                        <div class="suggestion-item">
+                          <strong>Hamburg, Germany</strong>
+                          <span class="suggestion-source">학습DB</span>
+                          <div style="font-size: 9px; color: #666">
+                            이전 프로젝트에서 사용됨
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="map-preview">
+                        🗺️ 지도<br />
+                        로딩 중...
+                      </div>
+                    </td>
+                    <td>
+                      <div style="color: #28a745; font-weight: bold">94%</div>
+                      <div style="font-size: 9px; color: #666">높음</div>
+                    </td>
+                    <td class="action-buttons-cell">
+                      <button class="btn btn-success btn-mini">
+                        ✓ 보정주소로 재처리
+                      </button>
+                      <button class="btn btn-warning btn-mini">카카오맵</button>
+                      <button class="btn btn-info btn-mini">구글맵</button>
+                      <button class="btn btn-danger btn-mini">제외</button>
+                    </td>
+                  </tr>
+
+                  <tr class="error-row">
+                    <td><input type="checkbox" /></td>
+                    <td>156</td>
+                    <td><span class="error-type error-api">API 오류</span></td>
+                    <td>
+                      <div style="color: #dc3545; font-weight: bold">
+                        上海市浦东新区陆家嘴环路1000号
+                      </div>
+                      <div style="font-size: 10px; color: #666">
+                        → 부산시 해운대구 센텀중앙로 79
+                      </div>
+                    </td>
+                    <td class="correction-cell">
+                      <input
+                        type="text"
+                        class="correction-input"
+                        placeholder="보정된 주소 입력..."
+                        value=""
+                      />
+                      <div class="suggestion-dropdown">
+                        <div class="suggestion-item">
+                          <strong>Shanghai Lujiazui Ring Road 1000</strong>
+                          <span class="suggestion-source">바이두맵</span>
+                          <div style="font-size: 9px; color: #666">
+                            상하이 푸동신구
+                          </div>
+                        </div>
+                        <div class="suggestion-item">
+                          <strong>Pudong New Area, Shanghai</strong>
+                          <span class="suggestion-source">구글맵</span>
+                          <div style="font-size: 9px; color: #666">
+                            중국 상하이
+                          </div>
+                        </div>
+                        <div class="suggestion-item">
+                          <strong>1000 Lujiazui Ring Rd, Pudong</strong>
+                          <span class="suggestion-source">번역API</span>
+                          <div style="font-size: 9px; color: #666">
+                            자동 번역 결과
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="map-preview">
+                        🗺️ 지도<br />
+                        미리보기
+                      </div>
+                    </td>
+                    <td>
+                      <div style="color: #ffc107; font-weight: bold">76%</div>
+                      <div style="font-size: 9px; color: #666">보통</div>
+                    </td>
+                    <td class="action-buttons-cell">
+                      <button class="btn btn-success btn-mini">
+                        ✓ 보정주소로 재처리
+                      </button>
+                      <button class="btn btn-warning btn-mini">카카오맵</button>
+                      <button class="btn btn-info btn-mini">구글맵</button>
+                      <button class="btn btn-danger btn-mini">제외</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 상세 보정 모달 -->
+      <div class="correction-modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">주소 오류 상세 보정 - ID: 327</div>
+            <button class="close-btn">×</button>
+          </div>
+
+          <div class="correction-grid">
+            <div class="correction-panel">
+              <div class="panel-title">📍 원본 정보</div>
+              <div class="form-group">
+                <label class="form-label">오류 주소</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  value="Unknown City, Germany"
+                  readonly
+                  style="background: #f8d7da"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">도착지</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  value="서울시 중구 명동길 78"
+                  readonly
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">오류 원인</label>
+                <textarea class="form-input" rows="3" readonly>
+주소가 너무 모호함. "Unknown City"는 실제 도시명이 아님. 독일 내 구체적 도시명 필요.</textarea
+                >
+              </div>
+            </div>
+
+            <div class="correction-panel">
+              <div class="panel-title">🔧 보정 작업</div>
+              <div class="form-group">
+                <label class="form-label">보정된 주소</label>
+                <input type="text" class="form-input" value="Munich, Germany" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">보정 사유</label>
+                <textarea
+                  class="form-input"
+                  rows="3"
+                  placeholder="보정 사유를 입력하세요..."
+                >
+상품명(화학제품)과 독일 내 주요 화학 산업 지역을 고려하여 뮌헨으로 보정. 바이에른 주의 주요 산업 도시.</textarea
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 25px">
+            <strong>🗺️ 지도 서비스별 검증</strong>
+            <div class="map-service-tabs">
+              <button class="tab-btn active">구글맵</button>
+              <button class="tab-btn">바이두맵</button>
+              <button class="tab-btn">카카오맵</button>
+              <button class="tab-btn">학습DB</button>
+            </div>
+            <div class="map-result">
+              <div class="search-result selected">
+                <div class="result-address">Munich, Germany</div>
+                <div class="result-details">
+                  위도: 48.1351, 경도: 11.5820<br />
+                  가장 가까운 공항: Munich Airport (MUC) - 28km
+                  <span class="confidence-score">94%</span>
+                </div>
+              </div>
+              <div class="search-result">
+                <div class="result-address">Munich, Bavaria, Germany</div>
+                <div class="result-details">
+                  위도: 48.1372, 경도: 11.5755<br />
+                  가장 가까운 공항: Munich Airport (MUC) - 29km
+                  <span class="confidence-score">92%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <div class="validation-info">
+              ✅ 주소 검증 완료 | 🛫 공항 매칭 성공 | 📏 거리 계산 가능
+            </div>
+            <div>
+              <button class="btn btn-secondary">취소</button>
+              <button class="btn btn-success" style="margin-left: 10px">
+                💾 보정 적용 및 재처리
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 실제 구현에서는 JavaScript로 다음 기능들이 동작합니다:
+      // 1. 실시간 주소 검색 및 제안
+      // 2. 지도 서비스 API 연동
+      // 3. 학습 데이터베이스 조회
+      // 4. 보정 진행률 업데이트
+      // 5. 일괄 처리 기능
+
+      // 모달 열기/닫기 시뮬레이션
+      document.addEventListener("DOMContentLoaded", function () {
+        // 상세 버튼 클릭 시 모달 표시
+        const detailButtons = document.querySelectorAll(
+          ".btn-primary.btn-mini"
+        );
+        const modal = document.querySelector(".correction-modal");
+        const closeBtn = document.querySelector(".close-btn");
+
+        detailButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            modal.style.display = "flex";
+          });
+        });
+
+        closeBtn.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
+
+        // 클릭 외부 영역 클릭 시 모달 닫기
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      });
+
+      // 실시간 주소 검색 시뮬레이션
+      function searchAddress(input) {
+        // 실제로는 여러 지도 API를 호출하여 결과를 가져옴
+        console.log("주소 검색:", input);
+      }
+
+      // 보정 적용 시뮬레이션
+      function applyCorrection(id, correctedAddress) {
+        // 실제로는 서버에 보정된 주소를 전송하고 재처리 시작
+        console.log("보정 적용:", id, correctedAddress);
+      }
+    </script>
+  </body>
+</html>
