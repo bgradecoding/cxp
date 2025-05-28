@@ -14,7 +14,7 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
+  console.log(isSidebarCollapsed);
   useEffect(() => {
     if (status === "loading") return;
     if (!session) router.push("/login");
