@@ -8,7 +8,6 @@ import {
   PlusIcon,
   EyeOpenIcon,
   DownloadIcon,
-  PlayIcon,
   PauseIcon,
   ReloadIcon,
   FileTextIcon,
